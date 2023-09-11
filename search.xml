@@ -217,7 +217,7 @@
   </entry>
   <entry>
     <title>关于JNDI</title>
-    <url>/2023/07/24/%E5%85%B3%E4%BA%8EJNDI/</url>
+    <url>/2023/08/24/%E5%85%B3%E4%BA%8EJNDI/</url>
     <content><![CDATA[<p>前面写了关于rmi的一些事情，下面写一下jndi的一些问题。其实就是按照b站白日梦组长的学习路径来的。</p>
 <p>什么是JNDI——JNDI (Java Naming and Directory Interface) ，包括Naming Service和Directory Service。JNDI是Java API，允许客户端通过名称发现和查找数据、对象。JNDI 架构由 API（应用程序编程接口）和 SPI（服务提供者接口）组成。Java 应用程序使用此 API 来访问各种命名和目录服务。SPI 可以透明地插入各种命名和目录服务，允许使用 JNDI 技术的 API 的 Java 应用程序访问它们的服务。这些对象可以存储在不同的命名或目录服务中，例如远程方法调用（RMI），公共对象请求代理体系结构（CORBA），轻型目录访问协议（LDAP）或域名服务（DNS）</p>
 <h2 id="JNDI功能实现"><a href="#JNDI功能实现" class="headerlink" title="JNDI功能实现"></a>JNDI功能实现</h2><p>前面提到了，支持rmi，我们以rmi来写一个demo，正好用到我们写的demo</p>
